@@ -17,16 +17,22 @@ class NightWriteTest < MiniTest::Test
   end
 
   def test_translates_the_message_into_the_top_line_of_braille
-    sample = "a"
     assert_equal "0.", NightWrite.braille_top("a")
+    assert_equal "..0.", NightWrite.braille_top("A")
   end
 
   def test_translates_the_message_into_the_middle_line_of_baraille
-    skip
+    assert_equal "..", NightWrite.braille_middle("a")
+    assert_equal "....", NightWrite.braille_middle("A")
   end
 
   def test_translates_the_message_into_the_bottom_line_of_braille
-    skip
+    assert_equal "..", NightWrite.braille_bottom("a")
+    assert_equal ".0..", NightWrite.braille_bottom("A")
+  end
+
+  def test_outputs_the_correct_braille_translation
+    assert_equal "..0.0.0.0.0...\n..00.00.0..0..\n.0....0.0.0...", NightWrite.translate_to_braille("Hello ")
   end
 
   def test_splits_the_message_into_lines_of_80_characters_each
@@ -41,44 +47,11 @@ class NightWriteTest < MiniTest::Test
     assert_equal "..\n..\n..", sample
   end
 
-
-
-
-
-
-
-
-  def test_accepts_a_file_from_the_command_line
-    skip
-    project_root = File.expand_path("..", __dir__)
-    Dir.chdir project_root do
-      printed = `ruby ./lib/night_write.rb message.txt braille.txt`
-      message = File.read(ARGV[0])
-      braille = File.open(ARGV[1], 'w')
-      top_line = NightWrite.translate(message, :top)
-      middle_line = NightWrite.translate(message, :middle)
-      bottom_line = NightWrite.translate(message, :bottom)
-      output_message = top_line + "\n" + middle_line + "\n" + bottom_line
-      assert_equal "Created braille.txt containing #{message.length} characters\n", printed
-      assert $?.success?
-    end
-  end
-
-  def test_accepts_it_can_read_a_single_file
-        skip
-    sample = File.read("message.txt")
-    assert_equal "hello wow\n\nwow\n", sample
-    assert_equal 15, sample.length
-  end
-
   def test_it_can_output_a_file_with_the_same_content_of_message_dot_txt
-        skip
-    handle = File.read("message.txt")
-    writer = File.open("test.txt", "w")
+    handle = File.read("test_message.txt")
+    writer = File.open("test_output.txt", "w")
     writer.write(handle)
     writer.close
-
-    assert_equal "hello wow\n\nwow\n", File.read("test.txt")
+    assert_equal "hello world\n", File.read("test_output.txt")
   end
-
 end

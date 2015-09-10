@@ -1,6 +1,6 @@
 class NightRead
 
-  def self.translate(message_array)
+  def self.translate_to_english(message_array)
     message_size = message_array[0].length
     nonbraille = ""
     for i in 0...message_size
@@ -78,7 +78,7 @@ if $PROGRAM_NAME == __FILE__
   message = File.read(ARGV[0])
   output_message = File.open(ARGV[1], 'w')
   message_array = message.split("\n")
-  output_message_from_braille = NightRead.translate(message_array)
+  output_message_from_braille = NightRead.translate_to_english(message_array)
   output_message.write(output_message_from_braille)
   puts "Created #{ARGV[1]} containing #{output_message_from_braille.length} characters"
 end
