@@ -1,27 +1,9 @@
 class NightWrite
-
   def self.translate_to_braille(message)
     top_line = translate_by_line(message, "top")
     middle_line = translate_by_line(message, "middle")
     bottom_line = translate_by_line(message, "bottom")
     compile_lines(top_line, middle_line, bottom_line)
-  end
-
-  def self.compile_lines(top_line, middle_line, bottom_line)
-    if top_line.length < 80
-      output_message = top_line + "\n" + middle_line + "\n" + bottom_line
-    else
-      output_message = line_limit(top_line, middle_line, bottom_line)
-    end
-  end
-
-  def self.line_limit(top_line, middle_line, bottom_line)
-    output_message = ""
-    lines = top_line.length/80
-    for x in 0..lines
-      output_message << top_line[80*x..80*x+79] + "\n" + middle_line[80*x..80*x+79] + "\n" + bottom_line[80*x..80*x+79] + "\n"
-    end
-    output_message
   end
 
   def self.translate_by_line(message, position)
@@ -38,6 +20,23 @@ class NightWrite
     line
   end
 
+  def self.compile_lines(top_line, middle_line, bottom_line)
+    if top_line.length < 80
+      top_line + "\n" + middle_line + "\n" + bottom_line
+    else
+      line_limit(top_line, middle_line, bottom_line)
+    end
+  end
+
+  def self.line_limit(top_line, middle_line, bottom_line)
+    output_message = ''
+    lines = top_line.length / 80
+    for x in 0..lines
+      output_message << top_line[80 * x..80 * x + 79] + "\n" + middle_line[80 * x..80 * x + 79] + "\n" + bottom_line[80 * x..80 * x + 79] + "\n"
+    end
+    output_message
+  end
+
   def self.braille_top(letter)
     line = letter.upcase == letter ? ".." : ""
     case letter.downcase
@@ -48,7 +47,7 @@ class NightWrite
     when "c", "d", "f", "g", "m", "n", "p", "q", "x", "y"
       line += "00"
     else
-       ".."
+      ".."
     end
   end
 
