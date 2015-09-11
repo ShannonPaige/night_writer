@@ -1,13 +1,24 @@
 class NightRead
 
-  def self.translate_to_english(message_array)
-    message_size = message_array[0].length
+  def self.translate_to_english(message)
+    message_array = message.split("\n")
+    number_of_lines = message_array.size/3
     nonbraille = ""
-    for i in 0...message_size
-      letter = grab_the_letter(message_array, i)
+    number_of_lines.times do |i|
+      line = [message_array[3*i], message_array[3*i+1], message_array[3*i+2]]
+      nonbraille << translate_line(line)
+    end
+    add_in_capitals(nonbraille)
+  end
+
+  def self.translate_line(line)
+    message_size = line[0].length
+    nonbraille = ""
+    for i in 0...message_size/2
+      letter = grab_the_letter(line, i)
       nonbraille += letter
     end
-    add_in_capitals(nonbraille.strip)
+    nonbraille
   end
 
   def self.grab_the_letter(message_array, i)
@@ -16,10 +27,11 @@ class NightRead
     bottom_array = []
     letter = ""
     message_array.each_index do |index|
-      if index == 0
+      index
+      if index % 3 == 0
         message_array[0][2*i..2*i+1]
         top_array << braille_top(message_array[0][2*i..2*i+1] )
-      elsif index == 1
+      elsif (index - 1) % 3 == 0
         middle_array << braille_middle(message_array[1][2*i..2*i+1])
       else
         bottom_array << braille_bottom(message_array[2][2*i..2*i+1])
@@ -32,6 +44,7 @@ class NightRead
   def self.add_in_capitals(nonbraille)
     nonbraille.gsub!(/\^\D/, &:upcase)
     nonbraille.gsub!(/\^/, "")
+    nonbraille
   end
 
   def self.braille_top(letter)
@@ -77,8 +90,8 @@ end
 if $PROGRAM_NAME == __FILE__
   message = File.read(ARGV[0])
   output_message = File.open(ARGV[1], 'w')
-  message_array = message.split("\n")
-  output_message_from_braille = NightRead.translate_to_english(message_array)
+  # message = message = "..0...0...00..00..0...00..00..0....0...0..0...0...00..00..0...00..00..0....0...0\n......0........0...0..0...00..00..0...00......0........0...0..0...00..00..0...00\n.0...0...0...0...0...0...0...0...0...0...00..00..00..00..00..00..00..00..00..00.\n..0...0....0..00..00..0...\n......0...00.......0...0..\n.000.000.0.0.000.000.000..\n"  # => "..0...0...00..00..0...00..00..0....0...0..0...0...00..00..0...00..00..0....0...0\n......0........0...0..0...00..00..0...00......0........0...0..0...00..00..0...00\n.0...0...0...0...0...0...0...0...0...0...00..00..00..00..00..00..00..00..00..00.\n..0...0....0..00..00..0...\n......0...00.......0...0..\n.000.000.0.0.000.000.000..\n"
+  output_message_from_braille = NightRead.translate_to_english(message)
   output_message.write(output_message_from_braille)
   puts "Created #{ARGV[1]} containing #{output_message_from_braille.length} characters"
 end

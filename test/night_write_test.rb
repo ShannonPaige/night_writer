@@ -37,12 +37,12 @@ class NightWriteTest < MiniTest::Test
     assert_equal 80, sample.lines[2].chomp.chars.count
   end
 
-  def test_spaces_are_used_in_place_of_unsupported_characters_in_the_message
+  def test_unsupported_characters_in_the_message_are_translated_into_spaces
     sample = NightWrite.translate_to_braille("!")
     assert_equal "..\n..\n..", sample
   end
 
-  def test_it_can_output_a_file_with_the_same_content_of_message_dot_txt
+  def test_it_can_output_a_file_with_the_same_content_of_test_message_dot_txt
     handle = File.read("test_message.txt")
     writer = File.open("test_output.txt", "w")
     writer.write(handle)
