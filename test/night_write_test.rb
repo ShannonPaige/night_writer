@@ -2,14 +2,6 @@ require "night_write"
 
 class NightWriteTest < MiniTest::Test
 
-  # def test_accepts_a_message_file_from_the_command_line
-  #   skip
-  # end
-  #
-  # def test_accepts_an_output_file_fromt_the_command_line
-  #   skip
-  # end
-
   def test_reads_the_file_message_into_a_variable
     sample = File.read("test_message.txt")
     assert_equal "hello world\n", sample
@@ -32,7 +24,10 @@ class NightWriteTest < MiniTest::Test
   end
 
   def test_outputs_the_correct_braille_translation
-    assert_equal "..0.0.0.0.0...\n..00.00.0..0..\n.0....0.0.0...", NightWrite.translate_to_braille("Hello ")
+    message = "abcdefghijklmnopqrstuvwxyz "
+    assert_equal "0.0.00000.00000..0.00.0.00000.00000..0.00.0..000000...\n..0....0.00.00000.00..0....0.00.00000.00..0.00...0.0..\n....................0.0.0.0.0.0.0.0.0.0.0000.0000000..", NightWrite.translate_to_braille(message)
+    message = message.upcase
+    assert_equal "..0...0...00..00..0...00..00..0....0...0..0...0...00..00..0...00..00..0....0...0\n......0........0...0..0...00..00..0...00......0........0...0..0...00..00..0...00\n.0...0...0...0...0...0...0...0...0...0...00..00..00..00..00..00..00..00..00..00.\n..0...0....0..00..00..0...\n......0...00.......0...0..\n.000.000.0.0.000.000.000..\n", NightWrite.translate_to_braille(message)
   end
 
   def test_splits_the_message_into_lines_of_80_characters_each
